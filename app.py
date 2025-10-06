@@ -1,6 +1,11 @@
 from flask import Flask, render_template
 import asyncio
 import os
+import subprocess
+
+chromium_path = "/opt/render/.cache/ms-playwright/chromium_headless_shell-1187/chrome-linux/headless_shell"
+if not os.path.exists(chromium_path):
+    subprocess.run(["playwright", "install", "chromium"], check=True)
 
 from dart_scraper import main as run_dart_script
 
