@@ -1,8 +1,6 @@
 from flask import Flask, render_template
 import asyncio
 import os
-import subprocess
-subprocess.run(["playwright", "install"], check=True)
 
 from dart_scraper import main as run_dart_script
 

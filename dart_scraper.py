@@ -181,7 +181,7 @@ def append_to_csv(all_rows):
 # -----------------------------------------------------
 async def main():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
         page = await browser.new_page()
 
         # Step 1 – Get /games/ links

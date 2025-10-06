@@ -4,6 +4,16 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
-      playwright install
+      playwright install chromium
     startCommand: gunicorn app:app
+    plan: free
+
+  - type: cron
+    name: weekly-dartconnect-run
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      playwright install chromium
+    startCommand: python dart_scraper.py
+    schedule: "1 0 * * 2"  # Tuesday at 00:01 UTC
     plan: free
