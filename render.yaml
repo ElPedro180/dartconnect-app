@@ -7,12 +7,3 @@ services:
       python -m playwright install --with-deps chromium
     startCommand: gunicorn app:app
     plan: free
-
-  - type: cron
-    name: weekly-dartconnect-run
-    env: python
-    buildCommand: |
-      pip install -r requirements.txt
-      python -m playwright install --with-deps chromium
-    startCommand: python dart_scraper.py
-    schedule: "1 0 * * 2"  # Tuesday at 00:01 UTC
