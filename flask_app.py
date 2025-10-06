@@ -28,4 +28,5 @@ def show_results():
     return render_template("index.html", headers=headers, rows=rows)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    port = int(os.environ.get("PORT", 8080))  # Zeeploy provides PORT dynamically
+    app.run(host="0.0.0.0", port=port)
