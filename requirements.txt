@@ -1,4 +1,2 @@
-Flask
 beautifulsoup4
 playwright
-gunicorn
