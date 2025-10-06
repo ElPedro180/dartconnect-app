@@ -2,10 +2,37 @@
 <html>
 <head>
     <title>Dart Scraper</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .message { margin-top: 20px; font-weight: bold; }
+    </style>
 </head>
 <body>
     <h1>DartConnect League Scraper</h1>
     <p><a href="/run">Run Scraper</a></p>
-    <p><a href="/download">Download CSV</a></p>
+    <p><a href="/results">View Results</a></p>
+
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+
+    {% if headers and rows %}
+        <table>
+            <tr>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in rows %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 </body>
 </html>

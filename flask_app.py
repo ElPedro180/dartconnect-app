@@ -1,5 +1,6 @@
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template
 import subprocess
+import csv
 import os
 
 app = Flask(__name__)
@@ -11,14 +12,20 @@ def home():
 @app.route("/run")
 def run_scraper():
     subprocess.run(["python", "dart_scraper.py"])
-    return "✅ Scraper executed!"
+    return render_template("index.html", message="✅ Scraper executed!")
 
-@app.route("/download")
-def download_csv():
-    path = "dart_highlights_combined.csv"
-    if os.path.exists(path):
-        return send_file(path, as_attachment=True)
-    return "❌ CSV not found."
+@app.route("/results")
+def show_results():
+    csv_path = "dart_highlights_combined.csv"
+    if not os.path.exists(csv_path):
+        return render_template("index.html", message="❌ CSV not found.")
+
+    with open(csv_path, newline='', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        headers = next(reader)
+        rows = list(reader)
+
+    return render_template("index.html", headers=headers, rows=rows)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
