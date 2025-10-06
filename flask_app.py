@@ -1,4 +1,3 @@
-import os
 from flask import Flask, render_template, jsonify
 import asyncio
 import dart_scraper
@@ -16,8 +15,3 @@ def scrape():
         return jsonify({"status": "success", "results": results})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 3000))  # 👈 use Zeeploy’s injected port
-    print(f"🚀 Starting Flask on 0.0.0.0:{port}")  # helpful log
-    app.run(host="0.0.0.0", port=port)

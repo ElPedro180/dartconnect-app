@@ -9,4 +9,5 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["python", "flask_app.py"]
+# Use Gunicorn as the entrypoint
+CMD ["gunicorn", "-b", "0.0.0.0:${PORT:-3000}", "flask_app:app"]
