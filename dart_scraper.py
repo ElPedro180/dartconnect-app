@@ -1,12 +1,11 @@
-#!/usr/bin/env python3
 import asyncio
-import re
-import csv
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
+import csv, re
 
 LEAGUE_URL = "https://tv.dartconnect.com/league/CarDL/matches/17812"
 OUTPUT_CSV = "dart_highlights_combined.csv"
+
 
 
 # -----------------------------------------------------
@@ -245,5 +244,36 @@ async def main():
         print("None found.")
 
 
+async def run_scraper():
+    results = []
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
+        page = await browser.new_page()
+
+        links = await get_latest_week_links(page)
+        if not links:
+            await browser.close()
+            return [["No links found"]]
+
+        game_urls = await follow_links_and_get_game_urls(links, page)
+        all_rows = []
+
+        for url in game_urls:
+            html = await fetch_html_playwright(page, url)
+            teams, high_scores, high_checkouts, short_games = parse_game_data(html)
+
+            for team, name, score in high_scores:
+                all_rows.append(["High Score", team, name, score, ""])
+            for team, name, score in high_checkouts:
+                all_rows.append(["High Checkout", team, name, score, ""])
+            for team, fmt, players, darts in short_games:
+                all_rows.append(["Short Game", team, fmt.title(), players, darts])
+
+        await browser.close()
+        append_to_csv(all_rows)
+        results = all_rows
+    return results
+
 if __name__ == "__main__":
     asyncio.run(main())
+

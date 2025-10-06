@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify
-import subprocess
+import asyncio
+import dart_scraper
 
 app = Flask(__name__)
 
@@ -10,11 +11,10 @@ def home():
 @app.route("/scrape", methods=["POST"])
 def scrape():
     try:
-        # Example: run your scraper script
-        result = subprocess.check_output(["python", "scripts/scrape_darts.py"], text=True)
-        return jsonify({"status": "success", "output": result})
-    except subprocess.CalledProcessError as e:
-        return jsonify({"status": "error", "output": e.output}), 500
+        results = asyncio.run(dart_scraper.run_scraper())
+        return jsonify({"status": "success", "results": results})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000)

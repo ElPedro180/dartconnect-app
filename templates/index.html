@@ -4,9 +4,15 @@
   <title>Darts Scraper</title>
   <script>
     async function runScrape() {
+      document.getElementById("output").innerText = "Running scraper...";
       const response = await fetch("/scrape", { method: "POST" });
       const data = await response.json();
-      document.getElementById("output").innerText = data.output || "Error running scraper";
+      if (data.status === "success") {
+        let text = data.results.map(r => r.join(" | ")).join("\n");
+        document.getElementById("output").innerText = text;
+      } else {
+        document.getElementById("output").innerText = "Error: " + data.message;
+      }
     }
   </script>
 </head>
