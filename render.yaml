@@ -4,6 +4,6 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
-      python -m playwright install chromium
+      playwright install
     startCommand: gunicorn app:app
     plan: free
