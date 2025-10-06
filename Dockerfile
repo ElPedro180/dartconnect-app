@@ -1,38 +1,18 @@
-FROM python:3.11-slim
+# Use official Playwright image with Python + all browser deps
+FROM mcr.microsoft.com/playwright/python:v1.47.0-focal
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONUNBUFFERED=1
-
-# Install system dependencies for Playwright
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    ca-certificates \
-    wget \
-    unzip \
-    fonts-liberation \
-    libnss3 \
-    libatk-bridge2.0-0 \
-    libxss1 \
-    libasound2 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libgbm1 \
-    libgtk-3-0 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libxext6 \
-    libxfixes3 \
-    libxi6 \
-    libxtst6 && \
-    rm -rf /var/lib/apt/lists/*
-
+# Set working directory
 WORKDIR /app
-COPY . /app
 
+# Install Python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN playwright install
 
-EXPOSE 8080
+# Copy app code
+COPY . .
+
+# Expose port 3000 inside container
+EXPOSE 3000
+
+# Run Flask on 0.0.0.0:3000 so Zeeploy can map it
 CMD ["python", "flask_app.py"]
