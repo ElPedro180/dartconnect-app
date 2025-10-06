@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, jsonify
 import asyncio
 import dart_scraper
@@ -17,4 +18,5 @@ def scrape():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    port = int(os.environ.get("PORT", 3000))  # 👈 use PORT if provided
+    app.run(host="0.0.0.0", port=port)
